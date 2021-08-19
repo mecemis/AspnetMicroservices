@@ -9,12 +9,140 @@ services:
     volumes:
       - mongo_data:/data/db
 
-    catalog.api:
-      container_name: catalog.api
-      environment:
+  basketdb:
+    container_name: basketdb
+    restart: always
+    ports:
+      - "6380:6379" #local port number : offical port number
+
+  discountdb:
+    container_name: discountdb
+    environment:
+        - POSTGRES_USER=admin
+        - POSTGRES_PASSWORD=admin1234
+        - POSTGRES_DB=DiscountDb
+    restart: always
+    ports:
+        - "5433:5432"
+    volumes:
+        - postgres_data:/var/lib/postgresql/data/
+
+  orderdb:
+    container_name: orderdb
+    environment:
+        SA_PASSWORD: "Murat123*"
+        ACCEPT_EULA: "Y"
+    restart: always
+    ports:
+        - "1434:1433"
+
+  catalog.api:
+    container_name: catalog.api
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - "DatabaseSettings:ConnectionString=mongodb://catalogdb:27018"
+    depends_on:
+      - catalogdb
+    ports:
+      - "8000:80"
+
+  basket.api:
+    container_name: basket.api
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - "CacheSettings:ConnectionString=basketdb:6380"
+      - "GrpcSettings:DiscountUrl=http://discount.grpc"
+      - "EventBusSettings:HostAddress=amqp://guest:guest@rabbitmq:5673"
+    depends_on:
+      - basketdb
+      - rabbitmq
+    ports:
+      - "8001:80"
+
+  discount.api:
+    container_name: discount.api
+    environment:
         - ASPNETCORE_ENVIRONMENT=Development
-        - "DatabaseSettings:ConnectionString=mongodb://catalogdb:27018"
-      depends_on:
-        - catalogdb
-      ports:
-        - "8000:80"
+        - "DatabaseSettings:ConnectionString=Server=discountdb;Port=5433;Database=DiscountDb;User Id=admin;Password=admin1234;"
+        - "ElasticConfiguration:Uri=http://elasticsearch:9200"
+    depends_on:
+        - discountdb
+    ports:
+        - "8002:80"
+
+  rabbitmq:
+    container_name: rabbitmq
+    restart: always
+    ports:
+        - "5673:5672"
+        - "15673:15672"
+
+  discount.grpc:
+    container_name: discount.grpc
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - "DatabaseSettings:ConnectionString=Server=discountdb;Port=5433;Database=DiscountDb;User Id=admin;Password=admin1234;"
+      - "ElasticConfiguration:Uri=http://elasticsearch:9200"
+    depends_on:
+      - discountdb
+    ports:
+      - "8003:80"
+
+  ordering.api:
+    container_name: ordering.api
+    environment:
+        - ASPNETCORE_ENVIRONMENT=Development
+        - "ConnectionStrings:OrderingConnectionString=Server=orderdb;Database=OrderDb;User Id=sa;Password=Murat123*"            
+        - "EventBusSettings:HostAddress=amqp://guest:guest@rabbitmq:5673"
+        - "ElasticConfiguration:Uri=http://elasticsearch:9200"
+    depends_on:
+        - orderdb
+        - rabbitmq
+    ports:
+        - "8004:80"
+
+
+  ocelotapigateway:
+    container_name: ocelotapigw
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - "ElasticConfiguration:Uri=http://elasticsearch:9200"
+    depends_on:
+        - catalog.api
+        - basket.api
+        - discount.api
+        - ordering.api
+    ports:
+      - "8010:80"
+
+
+  shipping.aggregator:
+    container_name: shipping.aggregator
+    environment:
+        - ASPNETCORE_ENVIRONMENT=Development
+        - "ApiSettings:CatalogUrl=http://catalog.api"
+        - "ApiSettings:BasketUrl=http://basket.api"
+        - "ApiSettings:OrderingUrl=http://ordering.api"
+        - "ElasticConfiguration:Uri=http://elasticsearch:9200"
+    depends_on:
+        - catalog.api
+        - basket.api
+        - ordering.api
+    ports:
+        - "8005:80"
+
+
+  aspnetrunbasics:
+    container_name: aspnetrunbasics
+    environment:
+        - ASPNETCORE_ENVIRONMENT=Development
+        - "ApiSettings:GatewayAddress=http://ocelotapigw"
+        - "ElasticConfiguration:Uri=http://elasticsearch:9200"
+    depends_on:
+        - ocelotapigw
+        - catalog.api
+        - basket.api
+        - discount.api
+        - ordering.api
+    ports:
+        - "8006:80"
