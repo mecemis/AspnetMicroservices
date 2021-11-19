@@ -34,7 +34,7 @@ namespace Ordering.API.Extensions
                     //if the sql server container is not created on run docker compose this
                     //migration can't fail for network related exception. The retry options for DbContext only 
                     //apply to transient exceptions                    
-                    retry.Execute(() => InvokeSeeder(seeder, context, services));
+                    retry.Execute(() => InvokeSeeder(seeder, context, services, logger));
 
                     logger.LogInformation("Migrated database associated with context {DbContextName}", typeof(TContext).Name);
                 }
@@ -47,9 +47,12 @@ namespace Ordering.API.Extensions
             return host;
         }
 
-        private static void InvokeSeeder<TContext>(Action<TContext, IServiceProvider> seeder, TContext context, IServiceProvider services)
+        private static void InvokeSeeder<TContext>(Action<TContext, IServiceProvider> seeder, TContext context,
+            IServiceProvider services, ILogger<TContext> logger)
             where TContext : DbContext
         {
+            var aa = context.Database.GetConnectionString();
+            logger.LogInformation(aa);
             context.Database.Migrate();
             seeder(context, services);
         }

@@ -64,6 +64,10 @@ services:
     environment:
         - ASPNETCORE_ENVIRONMENT=Development
         - "DatabaseSettings:ConnectionString=Server=discountdb;Port=5433;Database=DiscountDb;User Id=admin;Password=admin1234;"
+<<<<<<< Updated upstream
+=======
+        #- "ElasticConfiguration:Uri=http://elasticsearch:9200"
+>>>>>>> Stashed changes
     depends_on:
         - discountdb
     ports:
@@ -81,6 +85,10 @@ services:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - "DatabaseSettings:ConnectionString=Server=discountdb;Port=5433;Database=DiscountDb;User Id=admin;Password=admin1234;"
+<<<<<<< Updated upstream
+=======
+      #- "ElasticConfiguration:Uri=http://elasticsearch:9200"
+>>>>>>> Stashed changes
     depends_on:
       - discountdb
     ports:
@@ -92,6 +100,10 @@ services:
         - ASPNETCORE_ENVIRONMENT=Development
         - "ConnectionStrings:OrderingConnectionString=Server=orderdb;Database=OrderDb;User Id=sa;Password=Murat123*"            
         - "EventBusSettings:HostAddress=amqp://guest:guest@rabbitmq:5673"
+<<<<<<< Updated upstream
+=======
+        #- "ElasticConfiguration:Uri=http://elasticsearch:9200"
+>>>>>>> Stashed changes
     depends_on:
         - orderdb
         - rabbitmq
@@ -100,9 +112,13 @@ services:
 
 
   ocelotapigateway:
-    container_name: ocelotapigw
+    container_name: ocelotapigateway
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
+<<<<<<< Updated upstream
+=======
+      #- "ElasticConfiguration:Uri=http://elasticsearch:9200"
+>>>>>>> Stashed changes
     depends_on:
         - catalog.api
         - basket.api
@@ -119,6 +135,10 @@ services:
         - "ApiSettings:CatalogUrl=http://catalog.api"
         - "ApiSettings:BasketUrl=http://basket.api"
         - "ApiSettings:OrderingUrl=http://ordering.api"
+<<<<<<< Updated upstream
+=======
+        #- "ElasticConfiguration:Uri=http://elasticsearch:9200"
+>>>>>>> Stashed changes
     depends_on:
         - catalog.api
         - basket.api
@@ -131,9 +151,14 @@ services:
     container_name: aspnetrunbasics
     environment:
         - ASPNETCORE_ENVIRONMENT=Development
+<<<<<<< Updated upstream
         - "ApiSettings:GatewayAddress=http://ocelotapigw"
+=======
+        - "ApiSettings:GatewayAddress=http://ocelotapigateway"
+        #- "ElasticConfiguration:Uri=http://elasticsearch:9200"
+>>>>>>> Stashed changes
     depends_on:
-        - ocelotapigw
+        - ocelotapigateway
         - catalog.api
         - basket.api
         - discount.api
