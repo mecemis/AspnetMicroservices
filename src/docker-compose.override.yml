@@ -63,9 +63,8 @@ services:
     container_name: discount.api
     environment:
         - ASPNETCORE_ENVIRONMENT=Development
-        - "DatabaseSettings:ConnectionString=Server=discountdb;Port=5433;Database=DiscountDb;User Id=admin;Password=admin1234;"
+        - "ConnectionStrings:PostgreSql=Server=discountdb;Port=5433;Database=DiscountDb;User Id=admin;Password=admin1234;"
         #- "ElasticConfiguration:Uri=http://elasticsearch:9200"
-
     depends_on:
         - discountdb
     ports:
@@ -82,7 +81,7 @@ services:
     container_name: discount.grpc
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
-      - "DatabaseSettings:ConnectionString=Server=discountdb;Port=5433;Database=DiscountDb;User Id=admin;Password=admin1234;"
+      - "ConnectionStrings:PostgreSql=Server=discountdb;Port=5433;Database=DiscountDb;User Id=admin;Password=admin1234;"
       #- "ElasticConfiguration:Uri=http://elasticsearch:9200"
     depends_on:
       - discountdb
@@ -93,10 +92,9 @@ services:
     container_name: ordering.api
     environment:
         - ASPNETCORE_ENVIRONMENT=Development
-        - "ConnectionStrings:OrderingConnectionString=Server=orderdb;Database=OrderDb;User Id=sa;Password=Murat123*"            
+        - "ConnectionStrings:OrderingConnectionString=Server=orderdb;Database=OrderDb;User Id=sa;Password=Murat123*"       
         - "EventBusSettings:HostAddress=amqp://guest:guest@rabbitmq:5673"
         #- "ElasticConfiguration:Uri=http://elasticsearch:9200"
-
     depends_on:
         - orderdb
         - rabbitmq
@@ -109,7 +107,6 @@ services:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       #- "ElasticConfiguration:Uri=http://elasticsearch:9200"
-
     depends_on:
         - catalog.api
         - basket.api
@@ -127,7 +124,6 @@ services:
         - "ApiSettings:BasketUrl=http://basket.api"
         - "ApiSettings:OrderingUrl=http://ordering.api"
         #- "ElasticConfiguration:Uri=http://elasticsearch:9200"
-
     depends_on:
         - catalog.api
         - basket.api
@@ -143,7 +139,6 @@ services:
         - "ApiSettings:GatewayAddress=http://ocelotapigw"
         - "ApiSettings:GatewayAddress=http://ocelotapigateway"
         #- "ElasticConfiguration:Uri=http://elasticsearch:9200"
-
     depends_on:
         - ocelotapigateway
         - catalog.api
@@ -152,3 +147,24 @@ services:
         - ordering.api
     ports:
         - "8006:80"
+
+  elasticsearch:
+    container_name: elasticsearch
+    environment:
+        - xpack.monitoring.enabled=true
+        - xpack.watcher.enabled=false
+        - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+        - discovery.type=single-node
+    ports:
+        - "9200:9200"
+    volumes:
+        - elasticsearch-data:/usr/share/elasticsearch/data   
+
+  kibana:
+    container_name: kibana
+    environment:        
+        - ELASTICSEARCH_URL=http://elasticsearch:9200
+    depends_on:
+        - elasticsearch
+    ports:
+        - "5601:5601" 

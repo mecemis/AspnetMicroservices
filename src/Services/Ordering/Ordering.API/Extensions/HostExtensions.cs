@@ -20,6 +20,10 @@ namespace Ordering.API.Extensions
 
                 try
                 {
+
+                    var conStr = context.Database.GetConnectionString();
+                    logger.LogInformation(conStr);
+
                     logger.LogInformation("Migrating database associated with context {DbContextName}", typeof(TContext).Name);
 
                     var retry = Policy.Handle<SqlException>()
@@ -51,8 +55,8 @@ namespace Ordering.API.Extensions
             IServiceProvider services, ILogger<TContext> logger)
             where TContext : DbContext
         {
-            var aa = context.Database.GetConnectionString();
-            logger.LogInformation(aa);
+            //var conStr = context.Database.GetConnectionString();
+            //logger.LogInformation(conStr);
             context.Database.Migrate();
             seeder(context, services);
         }
