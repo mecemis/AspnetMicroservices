@@ -1,0 +1,11 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net5.0</TargetFramework>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="Serilog.aspnetcore" Version="4.1.0" />
+    <PackageReference Include="serilog.enrichers.environment" Version="2.2.0" />
+    <PackageReference Include="serilog.sinks.elasticsearch" Version="8.4.1" />
+  </ItemGroup>
+</Project>
