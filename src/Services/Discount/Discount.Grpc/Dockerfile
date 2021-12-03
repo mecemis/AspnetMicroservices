@@ -9,6 +9,7 @@ WORKDIR /src
 COPY ["Services/Discount/Discount.Grpc/Discount.Grpc.csproj", "Services/Discount/Discount.Grpc/"]
 COPY ["Services/Discount/Discount.Entity/Discount.Entity.csproj", "Services/Discount/Discount.Entity/"]
 COPY ["Services/Discount/Discount.Infrastructure/Discount.Infrastructure.csproj", "Services/Discount/Discount.Infrastructure/"]
+COPY ["BuildingBlocks/Common.Logging/Common.Logging.csproj", "BuildingBlocks/Common.Logging/"]
 RUN dotnet restore "Services/Discount/Discount.Grpc/Discount.Grpc.csproj"
 COPY . .
 WORKDIR "/src/Services/Discount/Discount.Grpc"
