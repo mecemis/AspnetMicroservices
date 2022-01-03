@@ -49,7 +49,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "WebApps", "WebApps", "{8948
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AspnetRunBasics", "WebApps\AspnetRunBasics\AspnetRunBasics.csproj", "{D9E123C0-AF30-492E-AC43-AC52822AAD3D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common.Logging", "BuildingBlocks\Common.Logging\Common.Logging.csproj", "{914E23D2-7E26-421D-8888-A5DFA7B01C6A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Common.Logging", "BuildingBlocks\Common.Logging\Common.Logging.csproj", "{914E23D2-7E26-421D-8888-A5DFA7B01C6A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebStatus", "WebApps\WebStatus\WebStatus.csproj", "{1F2F136E-FD19-405A-8B74-157B0F3ECE1C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -121,6 +123,10 @@ Global
 		{914E23D2-7E26-421D-8888-A5DFA7B01C6A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{914E23D2-7E26-421D-8888-A5DFA7B01C6A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{914E23D2-7E26-421D-8888-A5DFA7B01C6A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1F2F136E-FD19-405A-8B74-157B0F3ECE1C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1F2F136E-FD19-405A-8B74-157B0F3ECE1C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1F2F136E-FD19-405A-8B74-157B0F3ECE1C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1F2F136E-FD19-405A-8B74-157B0F3ECE1C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -145,6 +151,7 @@ Global
 		{2AE7F01E-636F-4F67-A7C7-928BCC8B0D55} = {10D8A60A-2A23-4DBA-A50D-0F644202A065}
 		{D9E123C0-AF30-492E-AC43-AC52822AAD3D} = {8948B3B4-5163-4F57-AED6-684936601997}
 		{914E23D2-7E26-421D-8888-A5DFA7B01C6A} = {9923FFF2-DF4E-4A0C-BEAB-85496C5D78BD}
+		{1F2F136E-FD19-405A-8B74-157B0F3ECE1C} = {8948B3B4-5163-4F57-AED6-684936601997}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {FB6D332D-E5BE-4690-A3F6-AF6E6936DFC0}
