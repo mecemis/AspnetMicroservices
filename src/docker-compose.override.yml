@@ -19,7 +19,7 @@ services:
     container_name: discountdb
     environment:
         - POSTGRES_USER=admin
-        - POSTGRES_PASSWORD=admin1234
+        - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:?see .env.example}
         - POSTGRES_DB=DiscountDb
     restart: always
     ports:
@@ -30,7 +30,7 @@ services:
   orderdb:
     container_name: orderdb
     environment:
-        SA_PASSWORD: "Murat123*"
+        SA_PASSWORD: "${SA_PASSWORD:?see .env.example}"
         ACCEPT_EULA: "Y"
     restart: always
     ports:
@@ -63,7 +63,7 @@ services:
     container_name: discount.api
     environment:
         - ASPNETCORE_ENVIRONMENT=Development
-        - "ConnectionStrings:PostgreSql=Server=discountdb;Port=5433;Database=DiscountDb;User Id=admin;Password=admin1234;"
+        - "ConnectionStrings:PostgreSql=Server=discountdb;Port=5433;Database=DiscountDb;User Id=admin;Password=${POSTGRES_PASSWORD};"
         - "ElasticConfiguration:Uri=http://elasticsearch:9200"
     depends_on:
         - discountdb
@@ -81,7 +81,7 @@ services:
     container_name: discount.grpc
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
-      - "ConnectionStrings:PostgreSql=Server=discountdb;Port=5433;Database=DiscountDb;User Id=admin;Password=admin1234;"
+      - "ConnectionStrings:PostgreSql=Server=discountdb;Port=5433;Database=DiscountDb;User Id=admin;Password=${POSTGRES_PASSWORD};"
       - "ElasticConfiguration:Uri=http://elasticsearch:9200"
     depends_on:
       - discountdb
@@ -92,7 +92,7 @@ services:
     container_name: ordering.api
     environment:
         - ASPNETCORE_ENVIRONMENT=Development
-        - "ConnectionStrings:OrderingConnectionString=Server=orderdb;Database=OrderDb;User Id=sa;Password=Murat123*"       
+        - "ConnectionStrings:OrderingConnectionString=Server=orderdb;Database=OrderDb;User Id=sa;Password=${SA_PASSWORD}"       
         - "EventBusSettings:HostAddress=amqp://guest:guest@rabbitmq:5673"
         - "ElasticConfiguration:Uri=http://elasticsearch:9200"
     depends_on:
